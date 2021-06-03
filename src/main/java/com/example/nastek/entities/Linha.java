@@ -1,8 +1,15 @@
 package com.example.nastek.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@Table
+@AllArgsConstructor
+@Data
 public class Linha {
     @Id
     private String cidade;
@@ -11,5 +18,9 @@ public class Linha {
     private Cliente cliente;
 
     @OneToMany(mappedBy = "linha", orphanRemoval = true)
-    private Estrutura estrutura;
+    private List<Estrutura> estruturas;
+
+    public Linha() {
+
+    }
 }

@@ -1,65 +1,44 @@
 package com.example.nastek.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.hibernate.validator.constraints.br.CNPJ;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table
+@AllArgsConstructor
+@Data
 public class Cliente {
     @Id
-    private String cnpj; // primary key
+    @GeneratedValue
+    private long id;
+
+    @NotEmpty(message = "CNPJ não pode ser vazio.")
+    @CNPJ
+    private String cnpj;
+
+    @NotBlank
     private String razaoSocial;
+
+    @NotBlank
     private String nomeFantasia;
+
+    @NotBlank
     private String endereco;
+
+    @NotBlank
     private String telefone;
 
     @OneToMany(mappedBy = "cliente", orphanRemoval = true)
-    private Linha linha;
-
-    public Cliente(String cnpj, String razaoSocial, String nomeFantasia, String endereco, String telefone) {
-        this.cnpj = cnpj;
-        this.razaoSocial = razaoSocial;
-        this.nomeFantasia = nomeFantasia;
-        this.endereco = endereco;
-        this.telefone = telefone;
-    }
+    private List<Linha> linhas;
 
     public Cliente() {
     }
 
-    public String getCnpj() {
-        return cnpj;
-    }
 
-    public String getRazaoSocial() {
-        return razaoSocial;
-    }
-
-    public String getNomeFantasia() {
-        return nomeFantasia;
-    }
-
-    public void setNomeFantasia(String nomeFantasia) {
-        this.nomeFantasia = nomeFantasia;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
 }

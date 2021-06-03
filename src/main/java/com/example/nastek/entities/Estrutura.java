@@ -1,15 +1,21 @@
 package com.example.nastek.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table
+@AllArgsConstructor
+@Data
 public class Estrutura {
     @Id
-    private String identificacao;
+    private String id;
     private String local;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable
     private Linha linha;
 
     @OneToOne(mappedBy = "estrutura")
@@ -21,25 +27,7 @@ public class Estrutura {
     @OneToOne(mappedBy = "estrutura")
     private Dispositivo faseC;
 
-    public Estrutura(String identificacao, String local) {
-        this.identificacao = identificacao;
-        this.local = local;
-    }
-
     public Estrutura() {
+
     }
-
-    public String getIdentificacao() {
-        return identificacao;
-    }
-
-    public String getLocal() {
-        return local;
-    }
-
-    public void setLocal(String local) {
-        this.local = local;
-    }
-
-
 }
