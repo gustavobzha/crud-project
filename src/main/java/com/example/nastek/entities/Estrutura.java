@@ -17,13 +17,16 @@ public class Estrutura {
     @ManyToOne(fetch = FetchType.LAZY)
     private Linha linha;
 
-    @OneToOne(mappedBy = "estrutura")
+    @OneToOne
+    @JoinColumn(name = "FASE_A")
     private Dispositivo faseA;
 
-    @OneToOne(mappedBy = "estrutura")
+    @OneToOne
+    @JoinColumn(name = "FASE_B")
     private Dispositivo faseB;
 
-    @OneToOne(mappedBy = "estrutura")
+    @OneToOne
+    @JoinColumn(name = "FASE_C")
     private Dispositivo faseC;
 
     public Estrutura() {
