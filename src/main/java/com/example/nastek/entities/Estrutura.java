@@ -15,7 +15,6 @@ public class Estrutura {
     private String local;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "Table_Join_Linha_Estrutura")
     private Linha linha;
 
     @OneToOne(mappedBy = "estrutura")
