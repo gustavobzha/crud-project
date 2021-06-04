@@ -16,7 +16,7 @@ import java.util.List;
 public class Cliente {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "CNPJ não pode ser vazio.")
     @CNPJ

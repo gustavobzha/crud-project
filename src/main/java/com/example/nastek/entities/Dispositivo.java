@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table
@@ -15,9 +17,12 @@ import javax.persistence.Table;
 @Data
 public class Dispositivo {
     @Id
-    private String numeroSerie; // primary key
+    private String numeroSerie;
 
+    @NotBlank
     private String modelo;
+
+    @NotEmpty
     private StatusDispositivo status;
 
     @OneToOne
