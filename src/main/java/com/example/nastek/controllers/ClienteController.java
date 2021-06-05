@@ -3,7 +3,9 @@ package com.example.nastek.controllers;
 import com.example.nastek.entities.Cliente;
 import com.example.nastek.service.ClienteService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -11,34 +13,41 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/clientes")
 public class ClienteController {
 
 
-    private final ClienteService service = new ClienteService();
+//    private final ClienteService service = new ClienteService();
+    @Autowired
+    private final ClienteService service;
 
-    @PostMapping("/addCliente")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente adicionarCliente(@Valid @RequestBody Cliente cliente){
-        return service.saveCliente(cliente);
+    public ResponseEntity<Cliente> insert(@Valid @RequestBody Cliente cliente){
+        cliente = service.insert(cliente);
+        return ResponseEntity.ok().body(cliente);
     }
 
     @GetMapping
-    public List<Cliente> buscarClientes(){
-        return service.getClientes();
+    public ResponseEntity<List<Cliente>> buscarClientes(){
+        List<Cliente> list = service.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/{ClienteId}")
-    public Cliente buscar(@PathVariable Long id){
-        return service.getClienteById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> findById(@PathVariable Long id){
+        Cliente cliente = service.findById(id);
+        return ResponseEntity.ok().body(cliente);
     }
 
-    @PutMapping("/{ClienteId}")
+    /*@PutMapping
     public Cliente atualizar(@RequestBody Cliente cliente){
         return service.updateCliente(cliente);
-    }
+    }*/
 
-    @DeleteMapping("/{ClienteId}")
-    public String deleteCliente(@PathVariable Long id){
-        return service.deleteCliente(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

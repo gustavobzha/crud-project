@@ -2,37 +2,40 @@ package com.example.nastek.service;
 
 import com.example.nastek.entities.Cliente;
 import com.example.nastek.repositories.ClienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
 
+    @Autowired
     private ClienteRepository repository;
 
-    public Cliente saveCliente(Cliente cliente){
+    public Cliente insert(Cliente cliente){
         return repository.save(cliente);
     }
 
-    public List<Cliente> getClientes(){
+    public List<Cliente> findAll(){
         return repository.findAll();
     }
 
-    public Cliente getClienteById(Long id){
-        return repository.findById(id).orElse(null);
+    public Cliente findById(Long id){
+        Optional<Cliente> obj = repository.findById(id);
+        return obj.get();
     }
 
-    public String deleteCliente(Long id){
+    public void delete(Long id){
         repository.deleteById(id);
-        return "Cliente removido" + id;
     }
 
-    public Cliente updateCliente(Cliente cliente){
+    /*public Cliente updateCliente(Cliente cliente){
         Cliente clienteExisting = repository.findById(cliente.getId()).orElse(null);
         clienteExisting.setNomeFantasia(cliente.getNomeFantasia());
         clienteExisting.setEndereco(cliente.getEndereco());
         clienteExisting.setTelefone(cliente.getTelefone());
         return repository.save(clienteExisting);
-    }
+    }*/
 }

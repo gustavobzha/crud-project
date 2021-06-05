@@ -10,12 +10,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 @Entity
 @Table
 @AllArgsConstructor
 @Data
-public class Dispositivo {
+public class Dispositivo implements Serializable {
     @Id
     private String numeroSerie;
 
