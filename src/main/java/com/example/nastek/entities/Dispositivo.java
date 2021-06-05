@@ -4,10 +4,7 @@ import com.example.nastek.enums.StatusDispositivo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -23,8 +20,8 @@ public class Dispositivo implements Serializable {
     @NotBlank
     private String modelo;
 
-    @NotEmpty
-    private StatusDispositivo status;
+
+    private StatusDispositivo status = StatusDispositivo.DESATIVADO;
 
     @OneToOne
     private Estrutura estrutura;
