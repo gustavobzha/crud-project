@@ -2,6 +2,7 @@ package com.example.nastek.service;
 
 import com.example.nastek.entities.Cliente;
 import com.example.nastek.repositories.ClienteRepository;
+import com.example.nastek.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +15,33 @@ public class ClienteService {
     @Autowired
     private ClienteRepository repository;
 
-    public Cliente insert(Cliente cliente){
+    public Cliente insert(Cliente cliente) {
         return repository.save(cliente);
     }
 
-    public List<Cliente> findAll(){
+    public List<Cliente> findAll() {
         return repository.findAll();
     }
 
-    public Cliente findById(Long id){
+    public Cliente findById(Long id) {
         Optional<Cliente> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 
-    /*public Cliente updateCliente(Cliente cliente){
-        Cliente clienteExisting = repository.findById(cliente.getId()).orElse(null);
-        clienteExisting.setNomeFantasia(cliente.getNomeFantasia());
-        clienteExisting.setEndereco(cliente.getEndereco());
-        clienteExisting.setTelefone(cliente.getTelefone());
-        return repository.save(clienteExisting);
-    }*/
+    public Cliente update(Long id, Cliente cliente) {
+        Cliente entity = repository.getById(id);
+        updateData(entity, cliente);
+        return repository.save(entity);
+    }
+
+    private void updateData(Cliente entity, Cliente cliente) {
+        entity.setNomeFantasia(cliente.getNomeFantasia());
+        entity.setRazaoSocial(cliente.getRazaoSocial());
+        entity.setEndereco(cliente.getEndereco());
+        entity.setTelefone(cliente.getTelefone());
+    }
 }

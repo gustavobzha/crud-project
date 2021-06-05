@@ -40,10 +40,11 @@ public class ClienteController {
         return ResponseEntity.ok().body(cliente);
     }
 
-    /*@PutMapping
-    public Cliente atualizar(@RequestBody Cliente cliente){
-        return service.updateCliente(cliente);
-    }*/
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody Cliente cliente){
+        cliente = service.update(id, cliente);
+        return ResponseEntity.ok().body(cliente);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
