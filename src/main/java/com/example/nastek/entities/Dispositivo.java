@@ -1,32 +1,38 @@
 package com.example.nastek.entities;
 
 import com.example.nastek.enums.StatusDispositivo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
+
 @Entity
 @Table
-@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Dispositivo implements Serializable {
     @Id
-    private String numeroSerie;
+    private Long numeroSerie;
 
     @NotBlank
     private String modelo;
 
-
     private StatusDispositivo status = StatusDispositivo.DESATIVADO;
 
+    @JsonIgnore
     @OneToOne
     private Estrutura estrutura;
 
-    public Dispositivo() {
-
+    public Dispositivo(Long numeroSerie, @NotBlank String modelo, StatusDispositivo status, Estrutura estrutura) {
+        this.numeroSerie = numeroSerie;
+        this.modelo = modelo;
+        this.status = status;
     }
 }

@@ -57,5 +57,6 @@ public class ClienteService {
         entity.setRazaoSocial(cliente.getRazaoSocial());
         entity.setEndereco(cliente.getEndereco());
         entity.setTelefone(cliente.getTelefone());
+        entity.setLinhas(cliente.getLinhas());
     }
 }

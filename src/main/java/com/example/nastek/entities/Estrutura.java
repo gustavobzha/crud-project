@@ -3,17 +3,20 @@ package com.example.nastek.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table
-@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Estrutura implements Serializable {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String local;
 
     @JsonIgnore
@@ -32,7 +35,9 @@ public class Estrutura implements Serializable {
     @JoinColumn(name = "FASE_C")
     private Dispositivo faseC;
 
-    public Estrutura() {
-
+    public Estrutura(Long id, String local, Linha linha, Dispositivo faseA, Dispositivo faseB, Dispositivo faseC) {
+        this.id = id;
+        this.local = local;
+        this.linha = linha;
     }
 }

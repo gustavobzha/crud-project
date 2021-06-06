@@ -3,37 +3,51 @@ package com.example.nastek.controllers;
 import com.example.nastek.entities.Linha;
 import com.example.nastek.service.LinhaService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/linhas")
 public class LinhaController {
 
 
-    private final LinhaService service = new LinhaService();
+    @Autowired
+    private final LinhaService service;
 
-    @PostMapping("/addLinha")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Linha adicinarLinha(@Valid @RequestBody Linha linha) {
-        return service.saveLinha(linha);
+    public ResponseEntity<Linha> insert(@Valid @RequestBody Linha linha){
+        linha = service.insert(linha);
+        return ResponseEntity.ok().body(linha);
     }
 
-    @GetMapping("/{LinhaId}")
-    public Linha buscarLinha(@PathVariable String id) {
-        return service.getLinhaById(id);
+    @GetMapping
+    public ResponseEntity<List<Linha>> buscarLinhas(){
+        List<Linha> list = service.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
-    @PutMapping("/{LinhaId}")
-    public Linha atualizarLinha(@RequestBody Linha linha) {
-        return service.updateLinha(linha);
+    @GetMapping("/{id}")
+    public ResponseEntity<Linha> findById(@PathVariable Long id){
+        Linha linha = service.findById(id);
+        return ResponseEntity.ok().body(linha);
     }
 
-    @DeleteMapping("/{LinhaId}")
-    @ResponseStatus(HttpStatus.OK)
-    public String deleteLinha(@PathVariable String id) {
-        return service.deleteLinha(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<Linha> update(@PathVariable Long id, @RequestBody Linha linha){
+        linha = service.update(id, linha);
+        return ResponseEntity.ok().body(linha);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

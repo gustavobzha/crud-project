@@ -2,36 +2,51 @@ package com.example.nastek.controllers;
 
 import com.example.nastek.entities.Estrutura;
 import com.example.nastek.service.EstruturaService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-
+@AllArgsConstructor
 @RestController
+@RequestMapping("/estruturas")
 public class EstruturaController {
 
-    private final EstruturaService service = new EstruturaService();
+    @Autowired
+    private final EstruturaService service;
 
-    @PostMapping("/addEstrutura")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estrutura adionarEstrutura(@Valid @RequestBody Estrutura estrutura){
-        return service.saveEstrutura(estrutura);
+    public ResponseEntity<Estrutura> insert(@Valid @RequestBody Estrutura estrutura){
+        estrutura = service.insert(estrutura);
+        return ResponseEntity.ok().body(estrutura);
     }
 
-    @GetMapping("/{EstruturaId}")
-    public Estrutura buscarEstrutura(@PathVariable String id){
-        return service.getEstruturaById(id);
+    @GetMapping
+    public ResponseEntity<List<Estrutura>> buscarEstruturas(){
+        List<Estrutura> list = service.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
-    @PutMapping("/{EstruturaId}")
-    public Estrutura atualizarEstrutura(@RequestBody Estrutura estrutura){
-        return service.updateEstrutura(estrutura);
+    @GetMapping("/{id}")
+    public ResponseEntity<Estrutura> findById(@PathVariable Long id){
+        Estrutura estrutura = service.findById(id);
+        return ResponseEntity.ok().body(estrutura);
     }
 
-    @DeleteMapping("/{EstruturaId}")
-    @ResponseStatus(HttpStatus.OK)
-    public String deleteEstrutura(@PathVariable String id){
-        return service.deleteEstrutura(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<Estrutura> update(@PathVariable Long id, @RequestBody Estrutura estrutura){
+        estrutura = service.update(id, estrutura);
+        return ResponseEntity.ok().body(estrutura);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

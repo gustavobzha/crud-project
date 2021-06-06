@@ -34,19 +34,19 @@ public class DispositivoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dispositivo> findById(@PathVariable String id){
+    public ResponseEntity<Dispositivo> findById(@PathVariable Long id){
         Dispositivo dispositivo = service.findById(id);
         return ResponseEntity.ok().body(dispositivo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dispositivo> update(@PathVariable String id, @RequestBody Dispositivo dispositivo){
+    public ResponseEntity<Dispositivo> update(@PathVariable Long id, @RequestBody Dispositivo dispositivo){
         dispositivo = service.update(id, dispositivo);
         return ResponseEntity.ok().body(dispositivo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

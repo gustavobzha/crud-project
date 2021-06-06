@@ -29,12 +29,12 @@ public class DispositivoService {
         return repository.findAll();
     }
 
-    public Dispositivo findById(String id) {
+    public Dispositivo findById(Long id) {
         Optional<Dispositivo> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -44,7 +44,7 @@ public class DispositivoService {
         }
     }
 
-    public Dispositivo update(String id, Dispositivo dispositivo) {
+    public Dispositivo update(Long id, Dispositivo dispositivo) {
         try {
             Dispositivo entity = repository.getById(id);
             updateData(entity, dispositivo);
