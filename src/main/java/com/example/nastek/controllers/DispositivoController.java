@@ -20,14 +20,14 @@ public class DispositivoController {
     @Autowired
     private final DispositivoService service;
 
-    @PostMapping
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Dispositivo> insert(@Valid @RequestBody Dispositivo dispositivo){
         dispositivo = service.insert(dispositivo);
         return ResponseEntity.ok().body(dispositivo);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Dispositivo>> buscarDispositivos(){
         List<Dispositivo> list = service.findAll();
         return ResponseEntity.ok().body(list);
@@ -45,9 +45,13 @@ public class DispositivoController {
         return ResponseEntity.ok().body(dispositivo);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
+        Dispositivo dispositivo = service.findById(id);
+        if(dispositivo != null){
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }
