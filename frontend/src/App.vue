@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <CrudApp/>
+    <!-- <CrudApp/> -->
+    <router-view />
   </div>
 </template>
 
@@ -9,9 +10,9 @@ import CrudApp from './components/CrudApp.vue'
 
 export default {
   name: 'App',
-  components: {
+  /* components: {
     CrudApp
-  }
+  } */
 }
 </script>
 

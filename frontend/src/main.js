@@ -14,6 +14,8 @@ import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 
+import router from './router'
+
 Vue.config.productionTip = false
 Vue.component('DataTable', DataTable)
 Vue.component('Column', Column)
@@ -27,5 +29,6 @@ Vue.component('Toast', Toast)
 Vue.use(ToastService);
 
 new Vue({
+  router,
   render: h => h(App),
 }).$mount('#app')
