@@ -21,14 +21,15 @@ public class ClienteController {
     @Autowired
     private final ClienteService service;
 
-    @PostMapping
+
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Cliente> insert(@Valid @RequestBody Cliente cliente){
         cliente = service.insert(cliente);
         return ResponseEntity.ok().body(cliente);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Cliente>> buscarClientes(){
         List<Cliente> list = service.findAll();
         return ResponseEntity.ok().body(list);
