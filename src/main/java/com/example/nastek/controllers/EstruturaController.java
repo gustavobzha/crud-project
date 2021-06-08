@@ -19,14 +19,14 @@ public class EstruturaController {
     @Autowired
     private final EstruturaService service;
 
-    @PostMapping
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Estrutura> insert(@Valid @RequestBody Estrutura estrutura){
         estrutura = service.insert(estrutura);
         return ResponseEntity.ok().body(estrutura);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Estrutura>> buscarEstruturas(){
         List<Estrutura> list = service.findAll();
         return ResponseEntity.ok().body(list);
@@ -44,9 +44,13 @@ public class EstruturaController {
         return ResponseEntity.ok().body(estrutura);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
+        Estrutura estrutura = service.findById(id);
+        if(estrutura != null){
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }
