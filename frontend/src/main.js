@@ -11,6 +11,8 @@ import 'primevue/resources/themes/nova/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import Button from 'primevue/button';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 
 Vue.config.productionTip = false
 Vue.component('DataTable', DataTable)
@@ -20,6 +22,9 @@ Vue.component('Menubar',Menubar)
 Vue.component('Dialog', Dialog)
 Vue.component('InputText', InputText)
 Vue.component('Button', Button)
+Vue.component('Toast', Toast)
+
+Vue.use(ToastService);
 
 new Vue({
   render: h => h(App),

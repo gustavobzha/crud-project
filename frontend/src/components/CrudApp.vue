@@ -1,10 +1,14 @@
 <template>
   <div style="margin: 0 auto; width: 80%">
+    <Toast />
     <Panel header="Clientes">
       <Menubar :model="items" />
       <br />
       <DataTable
         :value="clientes"
+        :selection.sync="clienteSelecionado"
+        selectionMode="single"
+        dataKey="id"
         sortField="razaoSocial"
         :sortOrder="1"
         :paginator="true"
@@ -20,36 +24,73 @@
     <Dialog
       header="Adicionar Cliente"
       :visible.sync="displayModal"
-      :modal="true">
+      :modal="true"
+    >
       <span class="p-float-label">
-        <InputText id="CNPJ" type="text" v-model="cliente.cnpj" style="width: 100%"/>
+        <InputText
+          id="CNPJ"
+          type="text"
+          v-model="cliente.cnpj"
+          style="width: 100%"
+        />
         <label for="cnpj">CNPJ</label>
       </span>
-      <br>
+      <br />
       <span class="p-float-label">
-        <InputText id="Razão Social" type="text" v-model="cliente.razaoSocial" style="width: 100%"/>
+        <InputText
+          id="Razão Social"
+          type="text"
+          v-model="cliente.razaoSocial"
+          style="width: 100%"
+        />
         <label for="razaoSocial">Razão Social</label>
       </span>
-      <br>
+      <br />
       <span class="p-float-label">
-        <InputText id="Nome Fantasia" type="text" v-model="cliente.nomeFantasia" style="width: 100%"/>
+        <InputText
+          id="Nome Fantasia"
+          type="text"
+          v-model="cliente.nomeFantasia"
+          style="width: 100%"
+        />
         <label for="nomeFantasia">Nome Fantasia</label>
       </span>
-      <br>
+      <br />
       <span class="p-float-label">
-        <InputText id="Endereço" type="text" v-model="cliente.endereco" style="width: 100%"/>
+        <InputText
+          id="Endereço"
+          type="text"
+          v-model="cliente.endereco"
+          style="width: 100%"
+        />
         <label for="endereco">Endereço</label>
       </span>
-      <br>
+      <br />
       <span class="p-float-label">
-        <InputText id="Telefone" type="text" v-model="cliente.telefone" style="width: 100%"/>
+        <InputText
+          id="Telefone"
+          type="text"
+          v-model="cliente.telefone"
+          style="width: 100%"
+        />
         <label for="telefone">Telefone</label>
       </span>
-      <br>
+      <br />
       <template #footer>
-        <Button label="Salvar" icon="pi pi-check" @click="save" class="p-button-text" autofocus />
-        <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-text"/>
-    </template>
+        <Button
+          label="Salvar"
+          icon="pi pi-check"
+          @click="save"
+          class="p-button-text"
+          autofocus
+        />
+        <Button
+          label="Cancelar"
+          icon="pi pi-times"
+          @click="closeModal"
+          class="p-button-text"
+        />
+      </template>
     </Dialog>
   </div>
 </template>
@@ -62,6 +103,16 @@ export default {
     return {
       clientes: null,
       cliente: {
+        id: null,
+        cnpj: null,
+        razaoSocial: null,
+        nomeFantasia: null,
+        endereco: null,
+        telefone: null,
+        linhas: null,
+      },
+      clienteSelecionado: {
+        id: null,
         cnpj: null,
         razaoSocial: null,
         nomeFantasia: null,
@@ -80,12 +131,16 @@ export default {
         {
           label: "Editar",
           icon: "pi pi-fw pi-pencil",
-          command: () => {},
+          command: () => {
+            this.showEditModal();
+          },
         },
         {
           label: "Excluir",
           icon: "pi pi-fw pi-trash",
-          command: () => {},
+          command: () => {
+            this.delete();
+          },
         },
         {
           label: "Atualizar",
@@ -94,6 +149,11 @@ export default {
             this.getAll();
           },
         },
+        {
+            label: "Linhas do cliente",
+            icon: "pi pi-fw pi-list",
+            command: () => {}
+        }
       ],
       displayModal: false,
     };
@@ -109,31 +169,63 @@ export default {
     showSaveModal() {
       this.displayModal = true;
     },
+    showEditModal() {
+      this.cliente = this.clienteSelecionado;
+      this.displayModal = true;
+    },
     getAll() {
       this.clienteService.getAll().then((data) => {
         this.clientes = data.data;
       });
     },
     save() {
-        this.clienteService.save(this.cliente).then(data => {
-            console.log(data)
-            if(data.status === 200){
-                this.displayModal = false;
-                this.cliente = {
-                    cnpj: null,
-                    razaoSocial: null,
-                    nomeFantasia: null,
-                    endereco: null,
-                    telefone: null,
-                    linhas: null,
-                }
-                alert("Cliente cadastrado com sucesso!")
-            }
+      this.clienteService.save(this.cliente).then((data) => {
+        console.log(data);
+        if (data.status === 200) {
+          this.displayModal = false;
+          this.cliente = {
+            id: null,
+            cnpj: null,
+            razaoSocial: null,
+            nomeFantasia: null,
+            endereco: null,
+            telefone: null,
+            linhas: null,
+          };
+          this.$toast.add({
+              severity: "success",
+              summary: "Concluído",
+              detail: "Cliente adicionado com sucesso!",
+              life: 3000,
+            });
+        }
+      });
+    },
+    delete() {
+      if (confirm("Tem certeza que deseja excluir este cliente?")) {
+        this.clienteService.delete(this.clienteSelecionado.id).then((data) => {
+          if (data.status === 200) {
+            this.$toast.add({
+              severity: "success",
+              summary: "Remoção concluída",
+              detail: "Cliente excluído com sucesso",
+              life: 3000,
+            });
+          }
         });
-        
+      }
     },
     closeModal() {
-        this.displayModal = false;
+      this.displayModal = false;
+      this.cliente = {
+        id: null,
+        cnpj: null,
+        razaoSocial: null,
+        nomeFantasia: null,
+        endereco: null,
+        telefone: null,
+        linhas: null,
+      };
     },
   },
 };
