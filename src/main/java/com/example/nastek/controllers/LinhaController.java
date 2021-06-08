@@ -20,14 +20,14 @@ public class LinhaController {
     @Autowired
     private final LinhaService service;
 
-    @PostMapping
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Linha> insert(@Valid @RequestBody Linha linha){
         linha = service.insert(linha);
         return ResponseEntity.ok().body(linha);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Linha>> buscarLinhas(){
         List<Linha> list = service.findAll();
         return ResponseEntity.ok().body(list);
@@ -45,9 +45,13 @@ public class LinhaController {
         return ResponseEntity.ok().body(linha);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
+        Linha linha = service.findById(id);
+        if(linha != null){
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }

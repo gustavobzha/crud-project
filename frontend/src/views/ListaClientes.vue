@@ -103,6 +103,8 @@
 
 <script>
 import ClienteService from "../service/ClienteService";
+import router from "../router"
+
 export default {
   name: "CrudApp",
   data() {
@@ -157,8 +159,10 @@ export default {
         },
         {
             label: "Linhas do cliente",
-            icon: "pi pi-fw pi-list",
-            command: () => {}
+            icon: "pi pi-fw pi-share-alt",
+            command: () => {
+                this.showLines();
+            }
         }
       ],
       displayModal: false,
@@ -232,6 +236,9 @@ export default {
         telefone: null,
         linhas: null,
       };
+    },
+    showLines(){
+        router.push('listaLinhas')
     },
   },
 };
