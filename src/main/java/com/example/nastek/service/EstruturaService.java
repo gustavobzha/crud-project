@@ -84,4 +84,6 @@ public class EstruturaService {
     public List<Estrutura> buscarEstruturasLinha(Long id){
         return repository.buscarEstruturasLinha(id);
     }
+
+
 }

@@ -54,4 +54,10 @@ public class DispositivoController {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/livres")
+    public ResponseEntity<List<Dispositivo>> buscarDispositivoSemEstrutura(){
+        List<Dispositivo> list = service.buscarDispositivoSemEstrutura();
+        return ResponseEntity.ok().body(list);
+    }
 }

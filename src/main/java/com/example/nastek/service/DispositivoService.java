@@ -57,4 +57,8 @@ public class DispositivoService {
     private void updateData(Dispositivo entity, Dispositivo dispositivo) {
         entity.setStatus(dispositivo.getStatus());
     }
+
+    public List<Dispositivo> buscarDispositivoSemEstrutura(){
+        return repository.buscarDispositivoSemEstrutura();
+    }
 }
