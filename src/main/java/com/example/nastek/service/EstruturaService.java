@@ -2,6 +2,7 @@ package com.example.nastek.service;
 
 import com.example.nastek.entities.Dispositivo;
 import com.example.nastek.entities.Estrutura;
+import com.example.nastek.entities.Linha;
 import com.example.nastek.enums.StatusDispositivo;
 import com.example.nastek.repositories.DispositivoRepository;
 import com.example.nastek.repositories.EstruturaRepository;
@@ -78,5 +79,9 @@ public class EstruturaService {
         estrutura.setFaseB(faseB);
         estrutura.setFaseC(faseC);
         repository.save(estrutura);
+    }
+
+    public List<Estrutura> buscarEstruturasLinha(Long id){
+        return repository.buscarEstruturasLinha(id);
     }
 }

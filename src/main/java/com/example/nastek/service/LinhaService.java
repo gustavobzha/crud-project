@@ -7,9 +7,10 @@ import com.example.nastek.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,4 +56,9 @@ public class LinhaService {
     public void updateData(Linha entity, Linha linha) {
         entity.setEstruturas(linha.getEstruturas());
     }
+
+    public List<Linha> buscarLinhasCliente(Long id){
+        return repository.buscarLinhasCliente(id);
+    }
+
 }

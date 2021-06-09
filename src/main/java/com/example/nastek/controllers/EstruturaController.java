@@ -1,6 +1,7 @@
 package com.example.nastek.controllers;
 
 import com.example.nastek.entities.Estrutura;
+import com.example.nastek.entities.Linha;
 import com.example.nastek.service.EstruturaService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,11 @@ public class EstruturaController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/linha/{id}")
+    public ResponseEntity<List<Estrutura>> buscarEstruturasLinha(@PathVariable Long id){
+        List<Estrutura> list = service.buscarEstruturasLinha(id);
+        return ResponseEntity.ok().body(list);
     }
 }

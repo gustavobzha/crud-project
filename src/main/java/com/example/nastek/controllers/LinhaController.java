@@ -54,4 +54,10 @@ public class LinhaController {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/cliente/{id}")
+    public ResponseEntity<List<Linha>> buscarLinhasCliente(@PathVariable Long id){
+        List<Linha> list = service.buscarLinhasCliente(id);
+        return ResponseEntity.ok().body(list);
+    }
 }

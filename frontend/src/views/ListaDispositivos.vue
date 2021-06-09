@@ -8,8 +8,8 @@
         :value="dispositivos"
         :selection.sync="dispositivoSelecionado"
         selectionMode="single"
-        dataKey="id"
-        sortField="local"
+        dataKey="numeroSerie"
+        sortField="numeroSerie"
         :sortOrder="1"
         :paginator="true"
         :rows="10"
@@ -24,55 +24,37 @@
       :visible.sync="displayModal"
       :modal="true"
     >
+      <br />
       <span class="p-float-label">
         <InputText
-          id="CNPJ"
+          id="Número Série"
           type="text"
-          v-model="dispositivo.cnpj"
+          v-model="dispositivo.numeroSerie"
           style="width: 100%"
         />
-        <label for="cnpj">CNPJ</label>
+        <label for="numeroSerie">Número Série</label>
       </span>
       <br />
       <span class="p-float-label">
         <InputText
-          id="Razão Social"
+          id="Modelo"
           type="text"
-          v-model="dispositivo.razaoSocial"
+          v-model="dispositivo.modelo"
           style="width: 100%"
         />
-        <label for="razaoSocial">Razão Social</label>
+        <label for="modelo">Modelo</label>
       </span>
       <br />
       <span class="p-float-label">
         <InputText
-          id="Nome Fantasia"
           type="text"
-          v-model="dispositivo.nomeFantasia"
+          v-model="dispositivo.status"
           style="width: 100%"
+          disabled
         />
-        <label for="nomeFantasia">Nome Fantasia</label>
+        <label for="status">Status</label>
       </span>
-      <br />
-      <span class="p-float-label">
-        <InputText
-          id="Endereço"
-          type="text"
-          v-model="dispositivo.endereco"
-          style="width: 100%"
-        />
-        <label for="endereco">Endereço</label>
-      </span>
-      <br />
-      <span class="p-float-label">
-        <InputText
-          id="Telefone"
-          type="text"
-          v-model="dispositivo.telefone"
-          style="width: 100%"
-        />
-        <label for="telefone">Telefone</label>
-      </span>
+
       <br />
       <template #footer>
         <Button
@@ -91,9 +73,9 @@
       </template>
     </Dialog>
     <Button
-      label="Voltar em Linhas"
+      label="Pagina Inicial"
       icon="pi pi-arrow-left"
-      @click="$router.push('listaLinhas')"
+      @click="$router.push('home')"
       class="p-button-text"
     />
   </div>
@@ -171,6 +153,7 @@ export default {
       });
     },
     save() {
+      this.dispositivo.status = "DESATIVADO";
       this.dispositivoService.save(this.dispositivo).then((data) => {
         console.log(data);
         if (data.status === 200) {
@@ -192,7 +175,7 @@ export default {
     delete() {
       if (confirm("Tem certeza que deseja excluir este dispositivo?")) {
         this.dispositivoService
-          .delete(this.dispositivoSelecionado.id)
+          .delete(this.dispositivoSelecionado.numeroSerie)
           .then((data) => {
             if (data.status === 200) {
               this.$toast.add({
