@@ -26,7 +26,7 @@ Vue.component('Dialog', Dialog)
 Vue.component('InputText', InputText)
 Vue.component('Button', Button)
 Vue.component('Toast', Toast)
-Vue.component('DropDown', Dropdown)
+Vue.component('Dropdown', Dropdown)
 
 Vue.use(ToastService);
 

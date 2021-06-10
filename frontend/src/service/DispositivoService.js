@@ -8,6 +8,10 @@ export default class DispositivosService {
         return axios.get(this.url + 'all');
     }
 
+    getLivres() {
+        return axios.get(this.url + 'livres');
+    }
+
     save(estrutura) {
         return axios.post(this.url + 'add' , estrutura);
     }

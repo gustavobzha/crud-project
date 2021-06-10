@@ -21,7 +21,11 @@
         <Column field="faseC.modelo" header="Fase C"></Column>
       </DataTable>
     </Panel>
-    <Dialog header="Adicionar Estrutura" :visible.sync="displayModal" :modal="true">
+    <Dialog
+      header="Adicionar Estrutura"
+      :visible.sync="displayModal"
+      :modal="true"
+    >
       <span class="p-float-label">
         <InputText
           id="Local"
@@ -32,38 +36,35 @@
         <label for="local">Local</label>
       </span>
       <br />
-      <span class="p-float-label">
-        <InputText
-          id="Fase A"
-          type="text"
-          v-model="estrutura.faseA"
-          style="width: 100%"
-        />
-        <Dropdown v-model="selectedCity1" :options="cities" optionLabel="name" placeholder="Selecione o dispositivo" />
-        <label for="faseA">Fase A</label>
-      </span>
+      <Dropdown
+        v-model="dispositivoSelecionado1"
+        :options="dispositivos"
+        optionLabel="numeroSerie"
+        placeholder="Selecione o dispositivo da Fase A"
+        style="width: 100%"
+      />
       <br />
-      <span class="p-float-label">
-        <InputText
-          id="Fase B"
-          type="text"
-          v-model="estrutura.faseB"
-          style="width: 100%"
-        />
-        <label for="faseB">Fase B</label>
-      </span>
       <br />
-      <span class="p-float-label">
-        <InputText
-          id="Fase C"
-          type="text"
-          v-model="estrutura.faseC"
-          style="width: 100%"
-        />
-        <label for="faseC">Fase C</label>
-      </span>
+      <Dropdown
+        v-model="dispositivoSelecionado2"
+        :options="dispositivos"
+        optionLabel="numeroSerie"
+        placeholder="Selecione o dispositivo da Fase B"
+        style="width: 100%"
+      />
       <br />
-      
+      <br />
+      <Dropdown
+        v-model="dispositivoSelecionado3"
+        :options="dispositivos"
+        optionLabel="numeroSerie"
+        placeholder="Selecione o dispositivo da Fase C"
+        style="width: 100%"
+      />
+      <br />
+      <br />
+      <br />
+      <br />
       <br />
       <template #footer>
         <Button
@@ -92,6 +93,7 @@
 
 <script>
 import EstruturaService from "../service/EstruturaService";
+import DispositivoService from "@/service/DispositivoService";
 
 export default {
   name: "ListaEstruturas",
@@ -106,10 +108,23 @@ export default {
         faseB: null,
         faseC: null,
       },
-      dispositivoSelecionado1: null,
-      dispositivoSelecionado2: null,
-      dispositivoSelecionado3: null,
+      dispositivoSelecionado1: {
+        numeroSerie: null,
+        modelo: null,
+        status: null,
+      },
+      dispositivoSelecionado2: {
+        numeroSerie: null,
+        modelo: null,
+        status: null,
+      },
+      dispositivoSelecionado3: {
+        numeroSerie: null,
+        modelo: null,
+        status: null,
+      },
       dispositivos: null,
+      dispositivosFiltrados: null,
       estruturaSelecionada: {
         id: null,
         local: null,
@@ -151,25 +166,34 @@ export default {
     };
   },
   estruturaService: null,
+  dispositivoService: null,
   created() {
     this.estruturaService = new EstruturaService();
+    this.dispositivoService = new DispositivoService();
   },
   mounted() {
-    this.linhaId = parseInt(localStorage.getItem('clienteId'))
+    this.linhaId = parseInt(localStorage.getItem("clienteId"));
     this.getAll();
+    this.getDispositivos();
+    this.filtrarDispositivos();
+    console.log(this.dispositivosFiltrados)
   },
   methods: {
     showSaveModal() {
       this.displayModal = true;
     },
     showEditModal() {
-      this.estrutura = this.estruturaSelecionada;
+      this.estrutura.faseA = this.dispositivoSelecionado1;
+      this.estrutura.faseB = this.dispositivoSelecionado2;
+      this.estrutura.faseC = this.dispositivoSelecionado3;
       this.displayModal = true;
     },
     getAll() {
-      this.estruturaService.getEstruturasLinha(parseInt(localStorage.getItem("linhaId"))).then((data) => {
-        this.estruturas = data.data;
-      });
+      this.estruturaService
+        .getEstruturasLinha(parseInt(localStorage.getItem("linhaId")))
+        .then((data) => {
+          this.estruturas = data.data;
+        });
     },
     save() {
       this.estruturaService.save(this.estrutura).then((data) => {
@@ -210,13 +234,40 @@ export default {
     },
     closeModal() {
       this.displayModal = false;
-      this.estrutura = {
-        id: null,
-        local: null,
-        faseA: null,
-        faseB: null,
-        faseC: null,
+      this.dispositivoSelecionado1 = {
+        numeroSerie: null,
+        modelo: null,
+        status: null,
       };
+      this.dispositivoSelecionado2 = {
+        numeroSerie: null,
+        modelo: null,
+        status: null,
+      };
+      this.dispositivoSelecionado3 = {
+        numeroSerie: null,
+        modelo: null,
+        status: null,
+      };
+    },
+    getDispositivos() {
+      this.dispositivoService.getLivres().then((data) => {
+        if (data.status === 200) {
+          this.dispositivos = data.data;
+        }
+      });
+    },
+    filtrarDispositivos() {
+      this.dispositivosFiltrados = [];
+      for (let dispositivo in this.dispositivos) {
+        if (
+          dispositivo != this.dispositivoSelecionado1 ||
+          dispositivo != this.dispositivoSelecionado2 ||
+          dispositivo != this.dispositivoSelecionado3
+        ) {
+          this.dispositivosFiltrados.push(dispositivo);
+        }
+      }
     },
   },
 };
