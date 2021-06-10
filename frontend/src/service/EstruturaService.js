@@ -12,6 +12,10 @@ export default class EstruturaService {
         return axios.get(this.url + 'linha/' + id);
     }
 
+    addDispositivos(dto) {
+        return axios.post(this.url + 'addDispositivos', dto)
+    }
+
     save(estrutura) {
         return axios.post(this.url + 'add' , estrutura);
     }

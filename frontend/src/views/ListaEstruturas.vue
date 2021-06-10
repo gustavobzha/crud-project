@@ -94,6 +94,7 @@
 <script>
 import EstruturaService from "../service/EstruturaService";
 import DispositivoService from "@/service/DispositivoService";
+import LinhaService from "@/service/LinhaService";
 
 export default {
   name: "ListaEstruturas",
@@ -167,25 +168,24 @@ export default {
   },
   estruturaService: null,
   dispositivoService: null,
+  linhaService: null,
   created() {
     this.estruturaService = new EstruturaService();
     this.dispositivoService = new DispositivoService();
+    this.linhaService = new LinhaService();
   },
   mounted() {
-    this.linhaId = parseInt(localStorage.getItem("clienteId"));
+    this.linhaId = parseInt(localStorage.getItem("linhaId"));
     this.getAll();
     this.getDispositivos();
     this.filtrarDispositivos();
-    console.log(this.dispositivosFiltrados)
+    console.log(this.dispositivosFiltrados);
   },
   methods: {
     showSaveModal() {
       this.displayModal = true;
     },
     showEditModal() {
-      this.estrutura.faseA = this.dispositivoSelecionado1;
-      this.estrutura.faseB = this.dispositivoSelecionado2;
-      this.estrutura.faseC = this.dispositivoSelecionado3;
       this.displayModal = true;
     },
     getAll() {
@@ -196,22 +196,78 @@ export default {
         });
     },
     save() {
+      /* this.estrutura.faseA = this.dispositivoSelecionado1;
+      this.estrutura.faseB = this.dispositivoSelecionado2;
+      this.estrutura.faseC = this.dispositivoSelecionado3; */
+
+      if (
+        !(
+          this.dispositivoSelecionado1.numeroSerie &&
+          this.dispositivoSelecionado2.numeroSerie &&
+          this.dispositivoSelecionado3.numeroSerie
+        )
+      ) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Adição não concluída",
+          detail: "Não pode haver fases vazias",
+          life: 3000,
+        });
+        return;
+      }
+
+      if (
+        this.dispositivoSelecionado1.numeroSerie ===
+          this.dispositivoSelecionado2.numeroSerie ||
+        this.dispositivoSelecionado1.numeroSerie ===
+          this.dispositivoSelecionado3.numeroSerie ||
+        this.dispositivoSelecionado2.numeroSerie ===
+          this.dispositivoSelecionado3.numeroSerie
+      ) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Adição não concluída",
+          detail: "Não pode haver dispositivos repetidos por fase",
+          life: 3000,
+        });
+        return;
+      }
+
       this.estruturaService.save(this.estrutura).then((data) => {
-        console.log(data);
         if (data.status === 200) {
-          this.displayModal = false;
-          this.estrutura = {
-            id: null,
-            local: null,
-            faseA: null,
-            faseB: null,
-            faseC: null,
-          };
-          this.$toast.add({
-            severity: "success",
-            summary: "Concluído",
-            detail: "Estrutura adicionado com sucesso!",
-            life: 3000,
+          this.estrutura = data.data;
+          var dtoED = this.makeDtoEstruturaDispositivos(
+            this.estrutura.id,
+            this.dispositivoSelecionado1.numeroSerie,
+            this.dispositivoSelecionado2.numeroSerie,
+            this.dispositivoSelecionado3.numeroSerie
+          );
+          this.estruturaService.addDispositivos(dtoED).then((data) => {
+            if (data.status === 200) {
+              this.estrutura = data.data;
+              var dtoLE = this.makeDtoLinhaEstrutura(
+                this.linhaId,
+                this.estrutura.id
+              );
+              this.linhaService.addEstrutura(dtoLE).then((data) => {
+                if (data.status === 200) {
+                  this.displayModal = false;
+                  this.estrutura = {
+                    id: null,
+                    local: null,
+                    faseA: null,
+                    faseB: null,
+                    faseC: null,
+                  };
+                  this.$toast.add({
+                    severity: "success",
+                    summary: "Concluído",
+                    detail: "Estrutura adicionado com sucesso!",
+                    life: 3000,
+                  });
+                }
+              });
+            }
           });
         }
       });
@@ -268,6 +324,25 @@ export default {
           this.dispositivosFiltrados.push(dispositivo);
         }
       }
+    },
+    makeDtoLinhaEstrutura(idLinha, idEstrutura) {
+      return {
+        idLinha: idLinha,
+        idEstrutura: idEstrutura,
+      };
+    },
+    makeDtoEstruturaDispositivos(
+      idEstrutura,
+      numeroSerieFaseA,
+      numeroSerieFaseB,
+      numeroSerieFaseC
+    ) {
+      return {
+        idEstrutura: idEstrutura,
+        numeroSerieFaseA: numeroSerieFaseA,
+        numeroSerieFaseB: numeroSerieFaseB,
+        numeroSerieFaseC: numeroSerieFaseC,
+      };
     },
   },
 };

@@ -12,6 +12,10 @@ export default class LinhaService {
         return axios.get(this.url + 'cliente/' + id);
     }
 
+    addEstrutura(dto) {
+        return axios.post(this.url + 'addEstrutura', dto)
+    }
+
     save(linha) {
         return axios.post(this.url + 'add' , linha);
     }

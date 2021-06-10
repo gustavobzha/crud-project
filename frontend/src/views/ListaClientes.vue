@@ -14,6 +14,7 @@
         :paginator="true"
         :rows="10"
       >
+        <Column field="id" header="ID"></Column>
         <Column field="cnpj" header="CNPJ"></Column>
         <Column field="razaoSocial" header="Razão Social"></Column>
         <Column field="nomeFantasia" header="Nome Fantasia"></Column>
@@ -215,6 +216,7 @@ export default {
       if (confirm("Tem certeza que deseja excluir este cliente?")) {
         this.clienteService.delete(this.clienteSelecionado.id).then((data) => {
           if (data.status === 200) {
+            this.delete = true;
             this.$toast.add({
               severity: "success",
               summary: "Remoção concluída",

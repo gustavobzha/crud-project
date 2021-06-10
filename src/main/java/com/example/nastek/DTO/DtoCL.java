@@ -1,4 +1,4 @@
-package com.example.nastek.entities;
+package com.example.nastek.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Dto {
+public class DtoCL {
 
-    private Long idEntidadePai;
-
-    private Long idEntidadeFilho;
+    private Long idCliente;
+    private Long idLinha;
 }

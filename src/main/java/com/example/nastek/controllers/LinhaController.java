@@ -1,6 +1,9 @@
 package com.example.nastek.controllers;
 
+import com.example.nastek.DTO.DtoLE;
+import com.example.nastek.entities.Estrutura;
 import com.example.nastek.entities.Linha;
+import com.example.nastek.service.EstruturaService;
 import com.example.nastek.service.LinhaService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,22 @@ public class LinhaController {
     @Autowired
     private final LinhaService service;
 
+    @Autowired
+    private final EstruturaService estruturaService;
+
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Linha> insert(@Valid @RequestBody Linha linha){
+        linha = service.insert(linha);
+        return ResponseEntity.ok().body(linha);
+    }
+
+    @PostMapping("/addEstrutura")
+    public ResponseEntity<Linha> adicionarEstrutura(@RequestBody DtoLE dtoLE){
+        Linha linha = service.findById(dtoLE.getIdLinha());
+        Estrutura estrutura = estruturaService.findById(dtoLE.getIdEstrutura());
+        estrutura.setLinha(linha);
+        linha.getEstruturas().add(estrutura);
         linha = service.insert(linha);
         return ResponseEntity.ok().body(linha);
     }

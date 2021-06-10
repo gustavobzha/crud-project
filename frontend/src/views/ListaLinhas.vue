@@ -154,8 +154,8 @@ export default {
       this.linhaService.save(this.linha).then((data) => {
         if (data.status === 200) {
           this.linha = data.data;
-          var dto = this.makeDTO(this.clienteId,this.linha.id)
-          this.clienteService.addLinha(dto).then((data) => {
+          var dtoCL = this.makeDTO(this.clienteId,this.linha.id)
+          this.clienteService.addLinha(dtoCL).then((data) => {
             if (data.status === 200) {
                 this.displayModal = false;
                 this.linha = {
@@ -208,8 +208,8 @@ export default {
     },
     makeDTO(idCliente, idLinha){
       return {
-        idEntidadePai: idCliente,
-        idEntidadeFilho: idLinha
+        idCliente: idCliente,
+        idLinha: idLinha
       }
     },
   },

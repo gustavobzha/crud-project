@@ -1,7 +1,11 @@
 package com.example.nastek.controllers;
 
+import com.example.nastek.DTO.DtoED;
+import com.example.nastek.entities.Dispositivo;
 import com.example.nastek.entities.Estrutura;
 import com.example.nastek.entities.Linha;
+import com.example.nastek.enums.StatusDispositivo;
+import com.example.nastek.service.DispositivoService;
 import com.example.nastek.service.EstruturaService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +24,31 @@ public class EstruturaController {
     @Autowired
     private final EstruturaService service;
 
+    @Autowired
+    private final DispositivoService dispositivoService;
+
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Estrutura> insert(@Valid @RequestBody Estrutura estrutura){
+        estrutura = service.insert(estrutura);
+        return ResponseEntity.ok().body(estrutura);
+    }
+
+    @PostMapping("/addDispositivos")
+    public ResponseEntity<Estrutura> adicionarDispositivos(@RequestBody DtoED dtoED){
+        Estrutura estrutura = service.findById(dtoED.getIdEstrutura());
+        Dispositivo faseA = dispositivoService.findById(dtoED.getNumeroSerieFaseA());
+        Dispositivo faseB = dispositivoService.findById(dtoED.getNumeroSerieFaseB());
+        Dispositivo faseC = dispositivoService.findById(dtoED.getNumeroSerieFaseC());
+        faseA.setStatus(StatusDispositivo.ATIVADO);
+        faseB.setStatus(StatusDispositivo.ATIVADO);
+        faseC.setStatus(StatusDispositivo.ATIVADO);
+        faseA.setEstrutura(estrutura);
+        faseB.setEstrutura(estrutura);
+        faseC.setEstrutura(estrutura);
+        estrutura.setFaseA(faseA);
+        estrutura.setFaseB(faseB);
+        estrutura.setFaseC(faseC);
         estrutura = service.insert(estrutura);
         return ResponseEntity.ok().body(estrutura);
     }

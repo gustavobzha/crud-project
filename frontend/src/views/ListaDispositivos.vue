@@ -26,10 +26,11 @@
     >
       <br />
       <span class="p-float-label">
-        <InputText
+        <InputNumber
           id="Número Série"
-          type="text"
           v-model="dispositivo.numeroSerie"
+          mode="decimal"
+          :useGrouping="false"
           style="width: 100%"
         />
         <label for="numeroSerie">Número Série</label>

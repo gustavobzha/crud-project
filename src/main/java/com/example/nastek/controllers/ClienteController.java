@@ -1,7 +1,7 @@
 package com.example.nastek.controllers;
 
 import com.example.nastek.entities.Cliente;
-import com.example.nastek.entities.Dto;
+import com.example.nastek.DTO.DtoCL;
 import com.example.nastek.entities.Linha;
 import com.example.nastek.service.ClienteService;
 import com.example.nastek.service.LinhaService;
@@ -48,9 +48,9 @@ public class ClienteController {
     }
 
     @PostMapping("/addLinha")
-    public ResponseEntity<Cliente> adicionarLinha(@RequestBody Dto dto ){
-        Cliente cliente = service.findById(dto.getIdEntidadePai());
-        Linha linha = linhaService.findById(dto.getIdEntidadeFilho());
+    public ResponseEntity<Cliente> adicionarLinha(@RequestBody DtoCL dtoCL){
+        Cliente cliente = service.findById(dtoCL.getIdCliente());
+        Linha linha = linhaService.findById(dtoCL.getIdLinha());
         linha.setCliente(cliente);
         cliente.getLinhas().add(linha);
         cliente = service.insert(cliente);
