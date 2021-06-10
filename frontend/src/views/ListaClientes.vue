@@ -103,10 +103,10 @@
 
 <script>
 import ClienteService from "../service/ClienteService";
-import router from "../router"
+import router from "../router";
 
 export default {
-  name: "CrudApp",
+  name: "ListaClientes",
   data() {
     return {
       clientes: null,
@@ -158,12 +158,12 @@ export default {
           },
         },
         {
-            label: "Linhas do cliente",
-            icon: "pi pi-fw pi-share-alt",
-            command: () => {
-                this.showLines();
-            }
-        }
+          label: "Linhas do cliente",
+          icon: "pi pi-fw pi-share-alt",
+          command: () => {
+            this.showLines();
+          },
+        },
       ],
       displayModal: false,
     };
@@ -203,11 +203,11 @@ export default {
             linhas: null,
           };
           this.$toast.add({
-              severity: "success",
-              summary: "Concluído",
-              detail: "Cliente adicionado com sucesso!",
-              life: 3000,
-            });
+            severity: "success",
+            summary: "Concluído",
+            detail: "Cliente adicionado com sucesso!",
+            life: 3000,
+          });
         }
       });
     },
@@ -237,8 +237,12 @@ export default {
         linhas: null,
       };
     },
-    showLines(){
-        router.push('listaLinhas')
+    showLines() {
+      if (this.clienteSelecionado.id){
+        console.log(this.clienteSelecionado)
+        localStorage.setItem('clienteId', this.clienteSelecionado.id.toString())
+        router.push("listaLinhas");
+        }
     },
   },
 };

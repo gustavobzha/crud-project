@@ -85,7 +85,7 @@
 import DispositivoService from "../service/DispositivoService";
 
 export default {
-  name: "CrudApp",
+  name: "ListaDispositivos",
   data() {
     return {
       dispositivos: null,

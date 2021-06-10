@@ -6,6 +6,7 @@ import Panel from 'primevue/panel';
 import Menubar from 'primevue/menubar';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
 
 import 'primevue/resources/themes/nova/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -25,8 +26,10 @@ Vue.component('Dialog', Dialog)
 Vue.component('InputText', InputText)
 Vue.component('Button', Button)
 Vue.component('Toast', Toast)
+Vue.component('DropDown', Dropdown)
 
 Vue.use(ToastService);
+
 
 new Vue({
   router,

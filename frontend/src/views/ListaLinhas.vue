@@ -19,55 +19,17 @@
       </DataTable>
     </Panel>
     <Dialog header="Adicionar Linha" :visible.sync="displayModal" :modal="true">
-      <span class="p-float-label">
-        <InputText
-          id="CNPJ"
-          type="text"
-          v-model="linha.cnpj"
-          style="width: 100%"
-        />
-        <label for="cnpj">CNPJ</label>
-      </span>
       <br />
       <span class="p-float-label">
         <InputText
-          id="Razão Social"
+          id="Cidade"
           type="text"
-          v-model="linha.razaoSocial"
+          v-model="linha.cidade"
           style="width: 100%"
         />
-        <label for="razaoSocial">Razão Social</label>
+        <label for="cidade">Cidade</label>
       </span>
-      <br />
-      <span class="p-float-label">
-        <InputText
-          id="Nome Fantasia"
-          type="text"
-          v-model="linha.nomeFantasia"
-          style="width: 100%"
-        />
-        <label for="nomeFantasia">Nome Fantasia</label>
-      </span>
-      <br />
-      <span class="p-float-label">
-        <InputText
-          id="Endereço"
-          type="text"
-          v-model="linha.endereco"
-          style="width: 100%"
-        />
-        <label for="endereco">Endereço</label>
-      </span>
-      <br />
-      <span class="p-float-label">
-        <InputText
-          id="Telefone"
-          type="text"
-          v-model="linha.telefone"
-          style="width: 100%"
-        />
-        <label for="telefone">Telefone</label>
-      </span>
+      
       <br />
       <template #footer>
         <Button
@@ -95,11 +57,12 @@
 </template>
 
 <script>
+import ClienteService from "@/service/ClienteService"
 import LinhaService from "../service/LinhaService";
 import router from "../router"
 
 export default {
-  name: "CrudApp",
+  name: "ListaLinhas",
   data() {
     return {
       linhas: null,
@@ -108,8 +71,17 @@ export default {
         cidade: null,
         estruturas: null,
       },
-      
-      linhaselecionada: {
+      clienteId: null,
+      cliente: {
+        id: null,
+        cnpj: null,
+        razaoSocial: null,
+        nomeFantasia: null,
+        endereco: null,
+        telefone: null,
+        linhas: null,
+      },
+      linhaSelecionada: {
         id: null,
         cidade: null,
         estruturas: null,
@@ -155,11 +127,15 @@ export default {
     };
   },
   linhaService: null,
+  clienteService: null,
   created() {
     this.linhaService = new LinhaService();
+    this.clienteService = new ClienteService();
   },
   mounted() {
+    this.clienteId = parseInt(localStorage.getItem('clienteId'))
     this.getAll();
+    this.getCliente();
   },
   methods: {
     showSaveModal() {
@@ -170,28 +146,34 @@ export default {
       this.displayModal = true;
     },
     getAll() {
-      this.linhaService.getAll().then((data) => {
+      this.linhaService.getLinhasCliente(this.clienteId).then((data) => {
         this.linhas = data.data;
       });
     },
     save() {
       this.linhaService.save(this.linha).then((data) => {
-        console.log(data);
         if (data.status === 200) {
-          this.displayModal = false;
-          this.linha = {
-            id: null,
-        cidade: null,
-        estruturas: null,
-          };
-          this.$toast.add({
-              severity: "success",
-              summary: "Concluído",
-              detail: "Linha adicionado com sucesso!",
-              life: 3000,
-            });
+          this.linha = data.data;
+          var dto = this.makeDTO(this.clienteId,this.linha.id)
+          this.clienteService.addLinha(dto).then((data) => {
+            if (data.status === 200) {
+                this.displayModal = false;
+                this.linha = {
+                id: null,
+                cidade: null,
+                estruturas: null,
+              };
+              console.log(data.data)
+              this.$toast.add({
+                  severity: "success",
+                  summary: "Concluído",
+                  detail: "Linha adicionado com sucesso!",
+                  life: 3000,
+              })
+            }
+          })
         }
-      });
+      })
     },
     delete() {
       if (confirm("Tem certeza que deseja excluir este linha?")) {
@@ -216,7 +198,19 @@ export default {
       };
     },
     showEstruturas(){
+        localStorage.setItem("linhaId", this.linhaSelecionada.id.toString())
         router.push('listaEstruturas')
+    },
+    getCliente(){
+        this.clienteService.getById(this.clienteId).then((data) => {
+          this.cliente = data.data;
+        });
+    },
+    makeDTO(idCliente, idLinha){
+      return {
+        idEntidadePai: idCliente,
+        idEntidadeFilho: idLinha
+      }
     },
   },
 };

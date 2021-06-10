@@ -1,7 +1,10 @@
 package com.example.nastek.controllers;
 
 import com.example.nastek.entities.Cliente;
+import com.example.nastek.entities.Dto;
+import com.example.nastek.entities.Linha;
 import com.example.nastek.service.ClienteService;
+import com.example.nastek.service.LinhaService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,9 @@ public class ClienteController {
     @Autowired
     private final ClienteService service;
 
+    @Autowired
+    private final LinhaService linhaService;
+
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,6 +44,16 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> findById(@PathVariable Long id){
         Cliente cliente = service.findById(id);
+        return ResponseEntity.ok().body(cliente);
+    }
+
+    @PostMapping("/addLinha")
+    public ResponseEntity<Cliente> adicionarLinha(@RequestBody Dto dto ){
+        Cliente cliente = service.findById(dto.getIdEntidadePai());
+        Linha linha = linhaService.findById(dto.getIdEntidadeFilho());
+        linha.setCliente(cliente);
+        cliente.getLinhas().add(linha);
+        cliente = service.insert(cliente);
         return ResponseEntity.ok().body(cliente);
     }
 

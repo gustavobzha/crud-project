@@ -8,6 +8,10 @@ export default class LinhaService {
         return axios.get(this.url + 'all');
     }
 
+    getLinhasCliente(id){
+        return axios.get(this.url + 'cliente/' + id);
+    }
+
     save(linha) {
         return axios.post(this.url + 'add' , linha);
     }

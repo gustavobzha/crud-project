@@ -16,61 +16,54 @@
       >
         <Column field="id" header="ID"></Column>
         <Column field="local" header="Local"></Column>
-        <Column field="faseA.numeroSerie" header="Fase A"></Column>
-        <Column field="faseB.numeroSerie" header="Fase B"></Column>
-        <Column field="faseC.numeroSerie" header="Fase C"></Column>
+        <Column field="faseA.modelo" header="Fase A"></Column>
+        <Column field="faseB.modelo" header="Fase B"></Column>
+        <Column field="faseC.modelo" header="Fase C"></Column>
       </DataTable>
     </Panel>
     <Dialog header="Adicionar Estrutura" :visible.sync="displayModal" :modal="true">
       <span class="p-float-label">
         <InputText
-          id="CNPJ"
+          id="Local"
           type="text"
-          v-model="estrutura.cnpj"
+          v-model="estrutura.local"
           style="width: 100%"
         />
-        <label for="cnpj">CNPJ</label>
+        <label for="local">Local</label>
       </span>
       <br />
       <span class="p-float-label">
         <InputText
-          id="Razão Social"
+          id="Fase A"
           type="text"
-          v-model="estrutura.razaoSocial"
+          v-model="estrutura.faseA"
           style="width: 100%"
         />
-        <label for="razaoSocial">Razão Social</label>
+        <Dropdown v-model="selectedCity1" :options="cities" optionLabel="name" placeholder="Selecione o dispositivo" />
+        <label for="faseA">Fase A</label>
       </span>
       <br />
       <span class="p-float-label">
         <InputText
-          id="Nome Fantasia"
+          id="Fase B"
           type="text"
-          v-model="estrutura.nomeFantasia"
+          v-model="estrutura.faseB"
           style="width: 100%"
         />
-        <label for="nomeFantasia">Nome Fantasia</label>
+        <label for="faseB">Fase B</label>
       </span>
       <br />
       <span class="p-float-label">
         <InputText
-          id="Endereço"
+          id="Fase C"
           type="text"
-          v-model="estrutura.endereco"
+          v-model="estrutura.faseC"
           style="width: 100%"
         />
-        <label for="endereco">Endereço</label>
+        <label for="faseC">Fase C</label>
       </span>
       <br />
-      <span class="p-float-label">
-        <InputText
-          id="Telefone"
-          type="text"
-          v-model="estrutura.telefone"
-          style="width: 100%"
-        />
-        <label for="telefone">Telefone</label>
-      </span>
+      
       <br />
       <template #footer>
         <Button
@@ -101,9 +94,10 @@
 import EstruturaService from "../service/EstruturaService";
 
 export default {
-  name: "CrudApp",
+  name: "ListaEstruturas",
   data() {
     return {
+      linhaId: null,
       estruturas: null,
       estrutura: {
         id: null,
@@ -112,6 +106,10 @@ export default {
         faseB: null,
         faseC: null,
       },
+      dispositivoSelecionado1: null,
+      dispositivoSelecionado2: null,
+      dispositivoSelecionado3: null,
+      dispositivos: null,
       estruturaSelecionada: {
         id: null,
         local: null,
@@ -157,6 +155,7 @@ export default {
     this.estruturaService = new EstruturaService();
   },
   mounted() {
+    this.linhaId = parseInt(localStorage.getItem('clienteId'))
     this.getAll();
   },
   methods: {
@@ -168,7 +167,7 @@ export default {
       this.displayModal = true;
     },
     getAll() {
-      this.estruturaService.getAll().then((data) => {
+      this.estruturaService.getEstruturasLinha(parseInt(localStorage.getItem("linhaId"))).then((data) => {
         this.estruturas = data.data;
       });
     },

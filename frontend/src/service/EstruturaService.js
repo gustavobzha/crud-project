@@ -8,6 +8,10 @@ export default class EstruturaService {
         return axios.get(this.url + 'all');
     }
 
+    getEstruturasLinha(id){
+        return axios.get(this.url + 'linha/' + id);
+    }
+
     save(estrutura) {
         return axios.post(this.url + 'add' , estrutura);
     }
